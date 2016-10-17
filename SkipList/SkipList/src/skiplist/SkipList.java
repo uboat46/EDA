@@ -36,13 +36,13 @@ public class SkipList <T extends Comparable<T>> {
                 aux = aux.getTop();
                 NodoSkip anterior = aux.getAba();
                 anterior = anterior.getIzq();
-                while( anterior.getElem()!= null && anterior.getAba() == null)
+                while( anterior.getElem()!= null && anterior.getTop() == null)
                 {
                     anterior = anterior.getIzq();
                 }
                 if(anterior.getElem() != null)// es un elemento no un extrenmo
                 {
-                    anterior.getAba().setDer(aux);
+                    anterior.getTop().setDer(aux);
                 }
                 else//es un extremo
                 {
@@ -146,9 +146,15 @@ public class SkipList <T extends Comparable<T>> {
         SkipList<Integer> li = new SkipList<>();
         
         li.imprime();
-        li.add(5);
+        //li.add(5);
+       // li.imprime();
+        //li.add(10);
         li.imprime();
-        li.add(10);
+        for (int i = 1; i < 1025; i++) {
+            li.add(i);
+        }
+        System.out.println("Insercion de 20 elementos");
+        System.out.println("=============================");
         li.imprime();
     }
     
