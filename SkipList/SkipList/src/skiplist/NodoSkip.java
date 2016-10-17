@@ -56,7 +56,12 @@ public class NodoSkip <T extends Comparable<T>>{
       public void setDer(NodoSkip der) {
         if( this.der != null)
         {
-            this.der.izq = der;
+            NodoSkip aux = this.der;
+            aux.izq = der;
+            this.der = der;
+            der.der = aux;
+            der.izq = this;
+            
         }
         else
         {
@@ -67,7 +72,11 @@ public class NodoSkip <T extends Comparable<T>>{
     public void setIzq(NodoSkip izq) {
         if( this.izq != null)
         {
-            this.izq.der = izq;
+            NodoSkip aux = this.izq;
+            aux.der = izq;
+            this.izq = izq;
+            izq.izq = aux;
+            izq.der = this;
         }
         else
         {
@@ -81,6 +90,7 @@ public class NodoSkip <T extends Comparable<T>>{
 
     public void setTop(NodoSkip top) {
         this.top = top;
+        top.setAba(this);
     }
   
 }
