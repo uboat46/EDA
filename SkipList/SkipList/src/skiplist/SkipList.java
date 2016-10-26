@@ -29,9 +29,9 @@ public class SkipList <T extends Comparable<T>> {
         aux.setDer(new NodoSkip(elem));
         aux = aux.getDer();
         boolean volado = volado();
-        int cant = ((int)(Math.log(n)/ Math.log(2))) +1;
+        int cant = ((int)(Math.log(n)/ Math.log(2))) +1;//+1??
         int i = 0;
-        while(volado)//i < cant
+        while(i < cant)//i < cant
         {
             if(volado)
             {
@@ -100,6 +100,44 @@ public class SkipList <T extends Comparable<T>> {
         }
         return aux;
     }
+
+    public NodoSkip elimina(T elem)
+    {
+        NodoSkip aux = busca(elem);
+        while( aux.getAba() != null)
+        {
+            aux = aux.getAba();
+        }
+        if( aux.getElem().compareTo(elem) == 0)//si estaba el elemento
+        {
+            NodoSkip borra = aux;
+            NodoSkip izq = aux.getIzq();
+            izq.setFder(aux.getDer());
+            
+            while(borra.getTop() != null)
+            {
+                borra = borra.getTop();
+                izq = borra.getIzq();
+                izq.setFder(borra.getDer());
+            }
+            if( borra.getIzq().getElem() == null && borra.getDer().getElem() == null)//era el de hasta arriba
+            {
+                if( start.getAba() != null)//no era el unico elemento
+                {
+                    start = start.getAba();
+                    start.setTop(null);
+                    end = end.getAba();
+                    end.setTop(null);
+                }
+            }
+        }
+        else//no estaba el elemento
+        {
+            aux = null;
+        }
+        return aux;
+        
+    }
     
     private boolean volado()
     {
@@ -113,56 +151,65 @@ public class SkipList <T extends Comparable<T>> {
         start = cabeza;
         end = cola;
         NodoSkip aux = cabeza;
-        int cant = ((int)(Math.log(n)/ Math.log(2))) +1;
-        
+        int cant = ((int)(Math.log(n)/ Math.log(2))) + 1;
         while( aux != null)
         {
-            aux.setTop(new NodoSkip(null));
+            aux.setTop(null);
             aux = aux.getDer();
         }
         System.out.println("Imprimiendo despues de borrar todo");
         this.imprimeBien();
-        while(cant > 0)
-        {   
-            restructura(start);
-            cant--;
-        }
+        restructura(cant);
 
     }
-    
-    private void restructura(NodoSkip n)
+      
+    private void restructura(int cant)
     {
-        int i = 1;
-        NodoSkip aux = n.getDer();
-        while( aux.getElem()!= null)
+        if (cant > 0)
         {
-            if( i%2 == 0)
+            NodoSkip act = start.getDer();
+            for (int i = 1; i < cant + 1; i++)
             {
-                aux.setTop(new NodoSkip(aux.getElem()));
-                aux = aux.getTop();
-                NodoSkip anterior = aux.getAba();
-                anterior = anterior.getIzq();
-                while( anterior.getElem()!= null && anterior.getTop() == null)
+                NodoSkip aux = act;
+                if( aux != null && aux.getElem() != null)
                 {
-                    anterior = anterior.getIzq();
+                    for (int j = 0; j < i; j++)
+                    {   
+                        aux.agregaTop(aux.getElem(),start,end);
+                        if(start.getTop() != null)
+                        {
+                            start = start.getTop();
+                            end = end.getTop();
+                        }
+                        aux = aux.getTop();
+                    }
                 }
-                if(anterior.getElem() != null)// es un elemento no un extrenmo
+                
+                
+                for (int j = 0; j < 2; j++)
                 {
-                    anterior.getTop().setDer(aux);
-                }
-                else//es un extremo
-                {
-                    start.setTop(new NodoSkip(null));
-                    start = start.getTop();
-                    end.setTop(new NodoSkip(null));
-                    end = end.getTop();
-                    start.setDer(end);
-                    start.setDer(aux);
-                    break;
+                    if(act.getDer() != null)
+                        act = act.getDer();
                 }
             }
-            i++;
-            n = n.getDer();
+            for (int i = cant -1 ; i > 0; i--)
+            {
+                NodoSkip aux = act;
+                if( aux != null && aux.getElem() != null)
+                {
+                    for (int j = 0; j < i; j++)
+                    {
+                        aux.agregaTop(aux.getElem(),start,end);
+                        aux = aux.getTop();
+                    }
+                }
+                
+                for (int j = 0; j < 2; j++)
+                {
+                    if(act.getDer() != null)
+                        act = act.getDer();
+                }
+            }
         }
     }
     
@@ -223,24 +270,27 @@ public class SkipList <T extends Comparable<T>> {
     public static void main(String[] args) 
     {
         SkipList<Integer> li = new SkipList<>();
-        
-        li.imprime();
-        //li.add(5);
-       // li.imprime();
-        //li.add(10);
-        li.imprime();
-        for (int i = 1; i < 3; i++) {
+
+        for (int i = 1; i < 19; i++) {
             li.add(i);
         }
         System.out.println("Insercion de 20 elementos");
         System.out.println("=============================");
         li.imprime();
-        
+        System.out.println("");
         System.out.println("Insercion de 20 elementos");
         System.out.println("=============================");
         li.imprimeBien();
         
         li.restructura();
+        
+        li.imprimeBien();
+        
+        li.elimina(1);
+        
+        li.imprimeBien();
+        
+        li.elimina(9);
         
         li.imprimeBien();
     }

@@ -83,14 +83,67 @@ public class NodoSkip <T extends Comparable<T>>{
             this.izq = izq;
         }
     }
-
+    
+    public void setFder(NodoSkip der)
+    {
+        if( this.der != null)
+        {
+            der.izq = this;
+            this.der = der;
+        }
+        else
+        {
+            this.der = der;
+        }
+    }
+    public void setFizq(NodoSkip izq)
+    {
+        if( this.izq != null)
+        {
+            izq.der = this;
+            this.izq = izq;
+        }
+        else
+        {
+            this.izq = izq;
+        }
+    }
+    
     public void setAba(NodoSkip aba) {
         this.aba = aba;
     }
 
     public void setTop(NodoSkip top) {
         this.top = top;
-        top.setAba(this);
+        if(top != null)
+            top.setAba(this);
+    }
+
+    void agregaTop(T elem,NodoSkip start,NodoSkip end)
+    {           
+                NodoSkip nuevo;
+                this.setTop(new NodoSkip(elem));
+                nuevo = this.top;
+                NodoSkip anterior = this;
+                anterior = anterior.izq;
+                while( anterior.elem != null && anterior.top == null)
+                {
+                    anterior = anterior.izq;
+                }
+                if(anterior.getElem() != null)// es un elemento no un extrenmo
+                {
+                    NodoSkip antTop = anterior.top;
+                    antTop.setDer(nuevo);
+                }
+                else//es un extremo
+                {
+                    start.setTop(new NodoSkip(null));
+                    start = start.getTop();
+                    end.setTop(new NodoSkip(null));
+                    end = end.getTop();
+                    start.setDer(end);
+                    start.setDer(nuevo);
+                }
     }
   
 }
