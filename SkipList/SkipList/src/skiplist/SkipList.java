@@ -151,18 +151,50 @@ public class SkipList <T extends Comparable<T>> {
         start = cabeza;
         end = cola;
         NodoSkip aux = cabeza;
-        int cant = ((int)(Math.log(n)/ Math.log(2))) + 1;
+        int cant = ((int)(Math.log(n)/ Math.log(2)));
         while( aux != null)
         {
             aux.setTop(null);
             aux = aux.getDer();
         }
         System.out.println("Imprimiendo despues de borrar todo");
+        System.out.println("=============================");
         this.imprimeBien();
-        restructura(cant);
+        //restructura(cant);
+        int i = 0;
+        System.out.println("Restructurando");
+       System.out.println("=============================");
+        while( i < cant)
+        {
+            restructura(cant,start,end);
+            i++;
+        }
 
     }
-      
+    
+     private void restructura(int cant,NodoSkip act,NodoSkip fin)
+     {
+        if( cant > 0)
+        {
+            NodoSkip aux = act.getDer();
+            int i = 2;
+            while( aux != null && aux.getElem()!= null)
+            {
+                if( i%2 == 0)
+                {
+                    aux.agregaTop(aux.getElem(),act, fin);
+                    if(start.getTop() != null)
+                    {
+                        start = start.getTop();
+                        end = end.getTop();
+                    }
+                } 
+            aux = aux.getDer();
+            i++;
+            } 
+        }
+     }
+     
     private void restructura(int cant)
     {
         if (cant > 0)
@@ -271,28 +303,50 @@ public class SkipList <T extends Comparable<T>> {
     {
         SkipList<Integer> li = new SkipList<>();
 
-        for (int i = 1; i < 19; i++) {
+//        for (int i = 1; i < 19; i++) {
+//            li.add(i);
+//        }
+//        System.out.println("Insercion de 20 elementos");
+//        System.out.println("=============================");
+//        li.imprime();
+//        System.out.println("");
+//        System.out.println("Insercion de 20 elementos");
+//        System.out.println("=============================");
+//        li.imprimeBien();
+//        
+//        li.restructura();
+//        
+//        li.imprimeBien();
+//        
+//        li.elimina(1);
+//        
+//        li.imprimeBien();
+//        
+//        li.elimina(9);
+//        
+//        li.imprimeBien();
+       System.out.println("Insercion de 64 elementos");
+       System.out.println("=============================");
+       for (int i = 0; i < 64; i++) 
+       {
             li.add(i);
-        }
-        System.out.println("Insercion de 20 elementos");
-        System.out.println("=============================");
-        li.imprime();
-        System.out.println("");
-        System.out.println("Insercion de 20 elementos");
-        System.out.println("=============================");
-        li.imprimeBien();
-        
-        li.restructura();
-        
-        li.imprimeBien();
-        
-        li.elimina(1);
-        
-        li.imprimeBien();
-        
-        li.elimina(9);
-        
-        li.imprimeBien();
+       }
+       li.imprimeBien();
+       li.restructura();
+       li.imprimeBien();
+       System.out.println("Eliminando");
+       System.out.println("=============================");
+       li.elimina(32);
+       li.elimina(30);
+       li.elimina(34);
+       li.elimina(28);
+       li.elimina(36);
+       
+       li.imprimeBien();
+       
+       li.restructura();
+       
+       li.imprimeBien();
     }
     
 }
